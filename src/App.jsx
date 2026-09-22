@@ -6,6 +6,7 @@ import NewGuidePage from "./pages/NewGuidePage.jsx";
 import GuideModal from "./components/GuideModal.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import AuthCallbackPage from "./pages/AuthCallbackPage.jsx";
+import InquiryPage from "./pages/InquiryPage.jsx";
 
 function App() {
   return (
@@ -17,6 +18,15 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
+      <Route
+        path="/guides/:id/inquiry"
+        element={
+          <ProtectedRoute>
+            <InquiryPage />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/guides/new"

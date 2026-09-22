@@ -99,6 +99,7 @@ export default function NewGuidePage() {
       },
       bio: { ko: bio.trim(), en: bio.trim(), zh: bio.trim(), ja: bio.trim() },
       stats,
+      ownerId: currentUser?.id,
       ownerEmail: currentUser?.email,
       createdAt: Date.now(),
     };

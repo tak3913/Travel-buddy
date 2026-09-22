@@ -116,7 +116,10 @@ export default function GuideModal() {
             ))}
           </div>
 
-          <button className="mt-7 w-full rounded-xl bg-brand-primary py-3.5 text-sm font-semibold text-white hover:bg-brand-primaryDark">
+          <button
+            onClick={() => navigate(`/guides/${guide.id}/inquiry`)}
+            className="mt-7 w-full rounded-xl bg-brand-primary py-3.5 text-sm font-semibold text-white hover:bg-brand-primaryDark"
+          >
             {t.cta(brandName.split(" ")[0])}
           </button>
         </div>
