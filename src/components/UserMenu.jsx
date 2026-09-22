@@ -66,6 +66,22 @@ export default function UserMenu() {
           >
             내 가이드 카드 등록하기
           </Link>
+          <Link
+            to="/my-guides"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-left text-sm text-brand-ink hover:bg-brand-primaryLight"
+          >
+            내 가이드 관리
+          </Link>
+          {currentUser.role === "admin" && (
+            <Link
+              to="/admin/moderation"
+              onClick={() => setOpen(false)}
+              className="block px-4 py-2.5 text-left text-sm font-semibold text-brand-primary hover:bg-brand-primaryLight"
+            >
+              가이드 운영 관리
+            </Link>
+          )}
           <button
             onClick={async () => {
               setOpen(false);

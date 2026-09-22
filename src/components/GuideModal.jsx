@@ -122,6 +122,14 @@ export default function GuideModal() {
           >
             {t.cta(brandName.split(" ")[0])}
           </button>
+          {guide.ownerId && (
+            <button
+              onClick={() => navigate(`/guides/${guide.id}/report`)}
+              className="mt-3 w-full rounded-xl py-2 text-xs font-medium text-brand-sub hover:bg-brand-bgSoft hover:text-brand-ink"
+            >
+              이 가이드 신고하기
+            </button>
+          )}
         </div>
       </div>
     </div>

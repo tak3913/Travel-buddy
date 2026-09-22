@@ -7,6 +7,10 @@ import GuideModal from "./components/GuideModal.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import AuthCallbackPage from "./pages/AuthCallbackPage.jsx";
 import InquiryPage from "./pages/InquiryPage.jsx";
+import ReportGuidePage from "./pages/ReportGuidePage.jsx";
+import MyGuidesPage from "./pages/MyGuidesPage.jsx";
+import AdminModerationPage from "./pages/AdminModerationPage.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
 
 function App() {
   return (
@@ -25,6 +29,30 @@ function App() {
           <ProtectedRoute>
             <InquiryPage />
           </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/guides/:id/report"
+        element={
+          <ProtectedRoute>
+            <ReportGuidePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-guides"
+        element={
+          <ProtectedRoute>
+            <MyGuidesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/moderation"
+        element={
+          <AdminRoute>
+            <AdminModerationPage />
+          </AdminRoute>
         }
       />
 

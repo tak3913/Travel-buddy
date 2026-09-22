@@ -3,11 +3,12 @@ import { requireSupabase } from "../lib/supabase.js";
 
 const AuthContext = createContext(null);
 
-function toPublicUser(user) {
+function toPublicUser(user, role = "user") {
   if (!user) return null;
   return {
     id: user.id,
     email: user.email,
+    role,
     name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0],
   };
 }
@@ -23,11 +24,19 @@ export function AuthProvider({ children }) {
     async function restoreSession() {
       try {
         const client = requireSupabase();
+        const hydrateUser = async (user) => {
+          if (!user) {
+            if (mounted) setCurrentUser(null);
+            return;
+          }
+          const { data } = await client.from("profiles").select("role").eq("id", user.id).maybeSingle();
+          if (mounted) setCurrentUser(toPublicUser(user, data?.role || "user"));
+        };
         const { data, error } = await client.auth.getSession();
         if (error) throw error;
-        if (mounted) setCurrentUser(toPublicUser(data.session?.user));
+        await hydrateUser(data.session?.user);
         ({ data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
-          if (mounted) setCurrentUser(toPublicUser(session?.user));
+          hydrateUser(session?.user);
         }));
       } catch (error) {
         console.warn(error.message);

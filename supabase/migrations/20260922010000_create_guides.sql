@@ -12,7 +12,7 @@ create table if not exists public.guides (
   rating numeric(2, 1) not null default 5.0 check (rating between 0 and 5),
   reviews integer not null default 0 check (reviews >= 0),
   match smallint not null default 90 check (match between 0 and 100),
-  status text not null default 'published' check (status in ('draft', 'published', 'hidden')),
+  status text not null default 'published' check (status in ('draft', 'published', 'private', 'hidden')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
