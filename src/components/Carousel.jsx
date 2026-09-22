@@ -41,7 +41,7 @@ export default function Carousel({ photos, modalSize = false }) {
         {photos.map((seed, i) => (
           <img
             key={i}
-            src={`https://picsum.photos/id/${seed}/600/700`}
+            src={String(seed).startsWith("http") ? seed : `https://picsum.photos/id/${seed}/600/700`}
             alt=""
             draggable={false}
             className="h-full w-full shrink-0 snap-start object-cover"

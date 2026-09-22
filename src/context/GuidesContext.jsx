@@ -7,41 +7,87 @@ import {
   useState,
 } from "react";
 import { GUIDES as STATIC_GUIDES } from "../data/guides.js";
+import { supabase } from "../lib/supabase.js";
 
 const GuidesContext = createContext(null);
-const STORAGE_KEY = "ybd_user_guides";
 
-function loadUserGuides() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function saveUserGuides(guides) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(guides));
+function toGuide(row) {
+  return {
+    id: row.id,
+    ownerId: row.owner_id,
+    handle: row.handle,
+    brand: row.brand,
+    tagline: row.tagline,
+    bio: row.bio,
+    tags: row.tags,
+    photos: row.photos,
+    brandColor: row.brand_color,
+    stats: row.stats,
+    rating: Number(row.rating),
+    reviews: row.reviews,
+    match: row.match,
+    createdAt: row.created_at,
+  };
 }
 
 export function GuidesProvider({ children }) {
   const [userGuides, setUserGuides] = useState([]);
+  const [loading, setLoading] = useState(Boolean(supabase));
 
   useEffect(() => {
-    setUserGuides(loadUserGuides());
+    let active = true;
+    async function loadGuides() {
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("guides")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) {
+        console.warn("가이드 목록을 불러오지 못했습니다.", error.message);
+      } else if (active) {
+        setUserGuides(data.map(toGuide));
+      }
+      if (active) setLoading(false);
+    }
+    loadGuides();
+    return () => { active = false; };
   }, []);
 
-  const addGuide = useCallback((guide) => {
-    setUserGuides((prev) => {
-      const next = [guide, ...prev];
-      saveUserGuides(next);
-      return next;
-    });
+  const addGuide = useCallback(async (guide) => {
+    if (!supabase) {
+      throw new Error("Supabase가 아직 설정되지 않았어요.");
+    }
+    const { data, error } = await supabase
+      .from("guides")
+      .insert({
+        owner_id: guide.ownerId,
+        handle: guide.handle,
+        brand: guide.brand,
+        tagline: guide.tagline,
+        bio: guide.bio,
+        tags: guide.tags,
+        photos: guide.photos.map(String),
+        brand_color: guide.brandColor,
+        stats: guide.stats,
+      })
+      .select()
+      .single();
+    if (error) {
+      if (error.code === "23505") throw new Error("이미 사용 중인 핸들이에요. 다른 핸들을 입력해주세요.");
+      throw error;
+    }
+    const savedGuide = toGuide(data);
+    setUserGuides((previous) => [savedGuide, ...previous]);
+    return savedGuide;
   }, []);
 
   // 사용자가 새로 등록한 가이드가 맨 앞에 오도록 정렬
   const guides = useMemo(() => [...userGuides, ...STATIC_GUIDES], [userGuides]);
 
-  const value = { guides, addGuide };
+  const value = { guides, loading, addGuide };
 
   return <GuidesContext.Provider value={value}>{children}</GuidesContext.Provider>;
 }

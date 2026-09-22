@@ -61,7 +61,7 @@ export default function NewGuidePage() {
     setStats((prev) => ({ ...prev, [key]: Number(value) }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
@@ -75,37 +75,28 @@ export default function NewGuidePage() {
     }
 
     setSubmitting(true);
-
-    const cleanedPhotos = photoUrls.map((u) => u.trim()).filter(Boolean);
-    const normalizedHandle = handle.trim().startsWith("@")
-      ? handle.trim()
-      : `@${handle.trim()}`;
-
-    const newGuide = {
-      id: Date.now(),
-      brandColor,
-      handle: normalizedHandle,
-      tags,
-      rating: 5.0,
-      reviews: 0,
-      match: 90,
-      photos: cleanedPhotos.length > 0 ? cleanedPhotos : DEFAULT_PHOTOS,
-      brand: { ko: brand.trim(), en: brand.trim(), zh: brand.trim(), ja: brand.trim() },
-      tagline: {
-        ko: tagline.trim(),
-        en: tagline.trim(),
-        zh: tagline.trim(),
-        ja: tagline.trim(),
-      },
-      bio: { ko: bio.trim(), en: bio.trim(), zh: bio.trim(), ja: bio.trim() },
-      stats,
-      ownerId: currentUser?.id,
-      ownerEmail: currentUser?.email,
-      createdAt: Date.now(),
-    };
-
-    addGuide(newGuide);
-    navigate(`/guide/${newGuide.id}`);
+    try {
+      const cleanedPhotos = photoUrls.map((u) => u.trim()).filter(Boolean);
+      const normalizedHandle = handle.trim().startsWith("@")
+        ? handle.trim()
+        : `@${handle.trim()}`;
+      const savedGuide = await addGuide({
+        brandColor,
+        handle: normalizedHandle,
+        tags,
+        photos: cleanedPhotos.length > 0 ? cleanedPhotos : DEFAULT_PHOTOS,
+        brand: { ko: brand.trim(), en: brand.trim(), zh: brand.trim(), ja: brand.trim() },
+        tagline: { ko: tagline.trim(), en: tagline.trim(), zh: tagline.trim(), ja: tagline.trim() },
+        bio: { ko: bio.trim(), en: bio.trim(), zh: bio.trim(), ja: bio.trim() },
+        stats,
+        ownerId: currentUser.id,
+      });
+      navigate(`/guide/${savedGuide.id}`);
+    } catch (submitError) {
+      setError(submitError.message || "가이드 카드 저장에 실패했어요.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const inputClass =
