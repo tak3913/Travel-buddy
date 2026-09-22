@@ -1,0 +1,33 @@
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import SignupPage from "./pages/SignupPage.jsx";
+import NewGuidePage from "./pages/NewGuidePage.jsx";
+import GuideModal from "./components/GuideModal.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AuthCallbackPage from "./pages/AuthCallbackPage.jsx";
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />}>
+        <Route path="guide/:id" element={<GuideModal />} />
+      </Route>
+
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
+      <Route
+        path="/guides/new"
+        element={
+          <ProtectedRoute>
+            <NewGuidePage />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
+}
+
+export default App;
