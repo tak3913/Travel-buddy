@@ -73,6 +73,20 @@ export default function UserMenu() {
           >
             내 가이드 관리
           </Link>
+          <Link
+            to="/my-trips"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-left text-sm text-brand-ink hover:bg-brand-primaryLight"
+          >
+            내 여행 문의
+          </Link>
+          <Link
+            to="/guide-inbox"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-left text-sm text-brand-ink hover:bg-brand-primaryLight"
+          >
+            가이드 문의함
+          </Link>
           {currentUser.role === "admin" && (
             <Link
               to="/admin/moderation"

@@ -11,6 +11,10 @@ import ReportGuidePage from "./pages/ReportGuidePage.jsx";
 import MyGuidesPage from "./pages/MyGuidesPage.jsx";
 import AdminModerationPage from "./pages/AdminModerationPage.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
+import GuideInboxPage from "./pages/GuideInboxPage.jsx";
+import ProposalPage from "./pages/ProposalPage.jsx";
+import MyTripsPage from "./pages/MyTripsPage.jsx";
+import TripPlanPage from "./pages/TripPlanPage.jsx";
 
 function App() {
   return (
@@ -46,6 +50,22 @@ function App() {
             <MyGuidesPage />
           </ProtectedRoute>
         }
+      />
+      <Route
+        path="/my-trips"
+        element={<ProtectedRoute><MyTripsPage /></ProtectedRoute>}
+      />
+      <Route
+        path="/guide-inbox"
+        element={<ProtectedRoute><GuideInboxPage /></ProtectedRoute>}
+      />
+      <Route
+        path="/guide-inbox/:inquiryId/proposal"
+        element={<ProtectedRoute><ProposalPage /></ProtectedRoute>}
+      />
+      <Route
+        path="/trips/proposals/:proposalId/plan"
+        element={<ProtectedRoute><TripPlanPage /></ProtectedRoute>}
       />
       <Route
         path="/admin/moderation"
