@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import GoogleButton from "../components/GoogleButton.jsx";
 
 export default function SignupPage() {
   const { signup, loginWithOAuth, updateProfile } = useAuth();
@@ -166,7 +167,7 @@ export default function SignupPage() {
       {!completingProfile && <>
         <div className="my-6 flex items-center gap-3 text-xs text-brand-faint"><span className="h-px flex-1 bg-brand-border" />간편 가입<span className="h-px flex-1 bg-brand-border" /></div>
         <div className="grid grid-cols-2 gap-3">
-          <button type="button" onClick={() => handleOAuth("google")} className="rounded-xl border border-brand-border py-3 text-sm font-semibold text-brand-ink">Google</button>
+          <GoogleButton onClick={() => handleOAuth("google")} label="Google" />
           <button type="button" onClick={() => handleOAuth("kakao")} className="rounded-xl bg-[#FEE500] py-3 text-sm font-semibold text-[#191919]">카카오</button>
         </div>
       </>}

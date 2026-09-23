@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import GoogleButton from "../components/GoogleButton.jsx";
 
 export default function LoginPage() {
   const { login, loginWithOAuth } = useAuth();
@@ -95,7 +96,7 @@ export default function LoginPage() {
         <span className="h-px flex-1 bg-brand-border" />간편 로그인<span className="h-px flex-1 bg-brand-border" />
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <button type="button" onClick={() => handleOAuth("google")} className="rounded-xl border border-brand-border py-3 text-sm font-semibold text-brand-ink">Google</button>
+        <GoogleButton onClick={() => handleOAuth("google")} label="Google" />
         <button type="button" onClick={() => handleOAuth("kakao")} className="rounded-xl bg-[#FEE500] py-3 text-sm font-semibold text-[#191919]">카카오</button>
       </div>
 
