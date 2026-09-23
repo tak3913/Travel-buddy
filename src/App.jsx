@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import QuickHomeButton from "./components/QuickHomeButton.jsx";
 import QuickBackButton from "./components/QuickBackButton.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -19,10 +19,11 @@ import MyTripsPage from "./pages/MyTripsPage.jsx";
 import TripPlanPage from "./pages/TripPlanPage.jsx";
 
 function App() {
+  const { pathname } = useLocation();
+  const showQuickNavigation = !["/", "/login", "/signup", "/auth/callback"].includes(pathname);
   return (
     <>
-      <QuickHomeButton />
-      <QuickBackButton />
+      {showQuickNavigation && <div className="mx-auto -mb-9 flex max-w-4xl items-center justify-between px-5 pt-6 sm:px-6"><QuickBackButton /><QuickHomeButton /></div>}
       <Routes>
       <Route path="/" element={<HomePage />}>
         <Route path="guide/:id" element={<GuideModal />} />

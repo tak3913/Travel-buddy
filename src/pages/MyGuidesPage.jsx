@@ -44,7 +44,6 @@ export default function MyGuidesPage() {
   const requestByGuide = Object.fromEntries(requests.map((item) => [item.guide_id, item]));
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-6 py-10">
-      <Link to="/" className="text-sm text-brand-sub hover:text-brand-primary">← 홈으로</Link>
       <div className="mt-6 flex flex-wrap items-end justify-between gap-4"><div><h1 className="font-display text-3xl font-semibold text-brand-ink">내 가이드 관리</h1><p className="mt-2 text-sm text-brand-sub">공개 상태를 관리하고 삭제 검토를 요청할 수 있어요.</p></div><Link to="/guides/new" className="rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white">새 카드 등록</Link></div>
       {error && <p className="mt-5 rounded-xl bg-red-50 p-3 text-sm text-red-600">{error}</p>}
       <div className="mt-7 space-y-3">

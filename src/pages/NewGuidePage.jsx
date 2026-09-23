@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useGuides } from "../context/GuidesContext.jsx";
@@ -104,11 +104,7 @@ export default function NewGuidePage() {
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-10">
-      <Link to="/" className="mb-6 inline-flex items-center gap-1.5 text-sm text-brand-sub hover:underline">
-        ← 홈으로
-      </Link>
-
-      <h1 className="mb-1 font-display text-2xl font-semibold text-brand-ink">
+      <h1 className="mb-1 mt-6 font-display text-2xl font-semibold text-brand-ink">
         가이드 카드 등록하기
       </h1>
       <p className="mb-8 text-sm text-brand-sub">
