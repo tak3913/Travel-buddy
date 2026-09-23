@@ -18,8 +18,6 @@ const COLOR_OPTIONS = [
 
 const STAT_KEYS = ["food", "photo", "shopping", "history", "chat"];
 
-const DEFAULT_PHOTOS = [1015, 1024, 1035];
-
 export default function NewGuidePage() {
   const { t } = useApp();
   const { currentUser } = useAuth();
@@ -84,7 +82,7 @@ export default function NewGuidePage() {
         brandColor,
         handle: normalizedHandle,
         tags,
-        photos: cleanedPhotos.length > 0 ? cleanedPhotos : DEFAULT_PHOTOS,
+        photos: cleanedPhotos,
         brand: { ko: brand.trim(), en: brand.trim(), zh: brand.trim(), ja: brand.trim() },
         tagline: { ko: tagline.trim(), en: tagline.trim(), zh: tagline.trim(), ja: tagline.trim() },
         bio: { ko: bio.trim(), en: bio.trim(), zh: bio.trim(), ja: bio.trim() },

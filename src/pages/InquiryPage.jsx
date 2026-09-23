@@ -47,9 +47,9 @@ export default function InquiryPage() {
 
   const guideName = pickLang(guide.brand, lang);
   const firstPhoto = guide.photos?.[0];
-  const guidePhotoUrl = String(firstPhoto || "1015").startsWith("http")
-    ? firstPhoto
-    : `https://picsum.photos/id/${firstPhoto || 1015}/200/200`;
+  const guidePhotoUrl = firstPhoto
+    ? (String(firstPhoto).startsWith("http") ? firstPhoto : `https://picsum.photos/id/${firstPhoto}/200/200`)
+    : null;
   const update = (key, value) => setForm((previous) => ({ ...previous, [key]: value }));
 
   async function handleSubmit(event) {
@@ -110,7 +110,7 @@ export default function InquiryPage() {
         <p className="mt-2 text-sm text-brand-sub">여행 계획을 알려주시면 가이드가 더 알맞게 답변할 수 있어요.</p>
 
         <section className="mt-7 flex items-center gap-4 rounded-2xl border border-brand-border bg-white p-4">
-          <img src={guidePhotoUrl} alt="" className="h-14 w-14 rounded-xl object-cover" />
+          {guidePhotoUrl ? <img src={guidePhotoUrl} alt="" className="h-14 w-14 rounded-xl object-cover" /> : <div className="h-14 w-14 rounded-xl border border-brand-border bg-white" aria-label="등록된 사진 없음" />}
           <div>
             <p className="text-xs font-semibold text-brand-primary">문의할 가이드</p>
             <h2 className="mt-0.5 font-semibold text-brand-ink">{guideName}</h2>

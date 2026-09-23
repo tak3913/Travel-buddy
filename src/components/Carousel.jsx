@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "../icons/Icons.jsx";
 export default function Carousel({ photos, modalSize = false }) {
   const trackRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const images = Array.isArray(photos) ? photos.filter(Boolean) : [];
 
   const goTo = (i) => {
     const track = trackRef.current;
@@ -16,7 +17,7 @@ export default function Carousel({ photos, modalSize = false }) {
     const track = trackRef.current;
     if (!track) return;
     const current = Math.round(track.scrollLeft / track.clientWidth);
-    const max = photos.length - 1;
+    const max = images.length - 1;
     goTo(Math.max(0, Math.min(max, current + dir)));
   };
 
@@ -38,7 +39,8 @@ export default function Carousel({ photos, modalSize = false }) {
         onScroll={handleScroll}
         className="flex h-full w-full snap-x snap-mandatory overflow-x-auto scroll-smooth no-scrollbar"
       >
-        {photos.map((seed, i) => (
+        {images.length === 0 && <div className="h-full w-full shrink-0 bg-white" aria-label="등록된 사진 없음" />}
+        {images.map((seed, i) => (
           <img
             key={i}
             src={String(seed).startsWith("http") ? seed : `https://picsum.photos/id/${seed}/600/700`}
@@ -49,7 +51,7 @@ export default function Carousel({ photos, modalSize = false }) {
         ))}
       </div>
 
-      {photos.length > 1 && (
+      {images.length > 1 && (
         <>
           <button
             type="button"
@@ -67,7 +69,7 @@ export default function Carousel({ photos, modalSize = false }) {
           </button>
 
           <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
-            {photos.map((_, i) => (
+            {images.map((_, i) => (
               <span
                 key={i}
                 className={`h-1.5 w-1.5 rounded-full ${
