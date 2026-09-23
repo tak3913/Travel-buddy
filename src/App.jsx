@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import QuickHomeButton from "./components/QuickHomeButton.jsx";
+import QuickBackButton from "./components/QuickBackButton.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
@@ -18,7 +20,10 @@ import TripPlanPage from "./pages/TripPlanPage.jsx";
 
 function App() {
   return (
-    <Routes>
+    <>
+      <QuickHomeButton />
+      <QuickBackButton />
+      <Routes>
       <Route path="/" element={<HomePage />}>
         <Route path="guide/:id" element={<GuideModal />} />
       </Route>
@@ -84,7 +89,8 @@ function App() {
           </ProtectedRoute>
         }
       />
-    </Routes>
+      </Routes>
+    </>
   );
 }
 
