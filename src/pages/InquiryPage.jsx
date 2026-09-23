@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useGuides } from "../context/GuidesContext.jsx";
@@ -8,6 +8,12 @@ import { useApp } from "../context/AppContext.jsx";
 
 const inputClass =
   "w-full rounded-xl border border-brand-border bg-white px-4 py-3 text-sm text-brand-ink outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primaryLight";
+const addDays = (dateValue, days) => {
+  if (!dateValue) return "";
+  const date = new Date(`${dateValue}T00:00:00`);
+  date.setDate(date.getDate() + Number(days));
+  return date.toISOString().slice(0, 10);
+};
 
 export default function InquiryPage() {
   const { id } = useParams();
@@ -18,8 +24,9 @@ export default function InquiryPage() {
   const guide = guides.find((item) => String(item.id) === String(id));
   const [form, setForm] = useState({
     tripStart: "",
-    tripEnd: "",
+    nights: "1",
     partySize: "1",
+    lodging: "",
     preferredLanguage: "ko",
     message: "",
     agreed: false,
@@ -27,6 +34,7 @@ export default function InquiryPage() {
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const tripEnd = useMemo(() => addDays(form.tripStart, form.nights), [form.nights, form.tripStart]);
 
   if (!guide) {
     return (
@@ -48,10 +56,6 @@ export default function InquiryPage() {
     event.preventDefault();
     setError("");
 
-    if (form.tripEnd < form.tripStart) {
-      setError("여행 종료일은 시작일 이후로 선택해주세요.");
-      return;
-    }
     if (!form.agreed) {
       setError("문의 전달을 위한 개인정보 수집·이용에 동의해주세요.");
       return;
@@ -65,7 +69,9 @@ export default function InquiryPage() {
         guide_owner_id: guide.ownerId || null,
         requester_id: currentUser.id,
         trip_start: form.tripStart,
-        trip_end: form.tripEnd,
+        trip_end: tripEnd,
+        nights: Number(form.nights),
+        lodging: form.lodging.trim() || null,
         party_size: Number(form.partySize),
         preferred_language: form.preferredLanguage,
         message: form.message.trim(),
@@ -116,12 +122,15 @@ export default function InquiryPage() {
           <section>
             <h2 className="text-base font-semibold text-brand-ink">여행 기본 정보</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <label className="text-sm font-medium text-brand-ink">여행 시작일
+              <label className="text-sm font-medium text-brand-ink">여행 기간
+                <select value={form.nights} onChange={(event) => update("nights", event.target.value)} className={`${inputClass} mt-1.5`}>
+                  {Array.from({ length: 8 }, (_, nights) => <option key={nights} value={nights}>{nights === 0 ? "당일 여행" : `${nights}박 ${nights + 1}일`}</option>)}
+                </select>
+              </label>
+              <label className="text-sm font-medium text-brand-ink">첫날
                 <input type="date" required min={new Date().toISOString().slice(0, 10)} value={form.tripStart} onChange={(event) => update("tripStart", event.target.value)} className={`${inputClass} mt-1.5`} />
               </label>
-              <label className="text-sm font-medium text-brand-ink">여행 종료일
-                <input type="date" required min={form.tripStart || new Date().toISOString().slice(0, 10)} value={form.tripEnd} onChange={(event) => update("tripEnd", event.target.value)} className={`${inputClass} mt-1.5`} />
-              </label>
+              {tripEnd && <div className="sm:col-span-2 rounded-xl bg-brand-primaryLight px-4 py-3 text-sm text-brand-primary">선택한 일정: <strong>{form.tripStart}</strong> 출발 · <strong>{tripEnd}</strong>까지 ({Number(form.nights) === 0 ? "당일" : `${form.nights}박 ${Number(form.nights) + 1}일`})</div>}
               <label className="text-sm font-medium text-brand-ink">여행 인원
                 <select value={form.partySize} onChange={(event) => update("partySize", event.target.value)} className={`${inputClass} mt-1.5`}>
                   {[1, 2, 3, 4, 5, 6].map((count) => <option key={count} value={count}>{count}명{count === 6 ? " 이상" : ""}</option>)}
@@ -131,6 +140,10 @@ export default function InquiryPage() {
                 <select value={form.preferredLanguage} onChange={(event) => update("preferredLanguage", event.target.value)} className={`${inputClass} mt-1.5`}>
                   <option value="ko">한국어</option><option value="en">English</option><option value="ja">日本語</option><option value="zh">中文</option>
                 </select>
+              </label>
+              <label className="sm:col-span-2 text-sm font-medium text-brand-ink">숙소 또는 머무를 지역
+                <input value={form.lodging} maxLength={500} onChange={(event) => update("lodging", event.target.value)} placeholder="예: Myeongdong, L7 Hongdae, 아직 미정" className={`${inputClass} mt-1.5`} />
+                <span className="mt-1 block text-xs font-normal text-brand-sub">숙소명·주소·머무를 동네를 적어주세요. 미정이라면 비워 두어도 됩니다.</span>
               </label>
             </div>
           </section>
