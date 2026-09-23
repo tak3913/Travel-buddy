@@ -29,8 +29,8 @@ export function AuthProvider({ children }) {
             if (mounted) setCurrentUser(null);
             return;
           }
-          const { data } = await client.from("profiles").select("role").eq("id", user.id).maybeSingle();
-          if (mounted) setCurrentUser(toPublicUser(user, data?.role || "user"));
+          const { data: isAdmin } = await client.rpc("is_admin");
+          if (mounted) setCurrentUser(toPublicUser(user, isAdmin ? "admin" : "user"));
         };
         const { data, error } = await client.auth.getSession();
         if (error) throw error;

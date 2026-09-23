@@ -23,7 +23,7 @@ export default function Header() {
             className="block h-[30px] w-[30px]"
           />
           <span className="font-display text-[19px] font-extrabold tracking-tightest text-brand-ink">
-            여행버디
+            이음
           </span>
         </Link>
 

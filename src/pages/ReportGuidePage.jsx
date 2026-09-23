@@ -37,6 +37,7 @@ export default function ReportGuidePage() {
     try {
       const { error: reportError } = await requireSupabase().from("guide_reports").insert({
         guide_id: guide.id,
+        guide_name: pickLang(guide.brand, lang),
         reporter_id: currentUser.id,
         reason,
         details: details.trim() || null,
