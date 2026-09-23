@@ -34,28 +34,19 @@ export function GuidesProvider({ children }) {
   const [userGuides, setUserGuides] = useState([]);
   const [loading, setLoading] = useState(Boolean(supabase));
 
-  useEffect(() => {
-    let active = true;
-    async function loadGuides() {
-      if (!supabase) {
-        setLoading(false);
-        return;
-      }
-      const { data, error } = await supabase
-        .from("guides")
-        .select("*")
-        .eq("status", "published")
-        .order("created_at", { ascending: false });
-      if (error) {
-        console.warn("가이드 목록을 불러오지 못했습니다.", error.message);
-      } else if (active) {
-        setUserGuides(data.map(toGuide));
-      }
-      if (active) setLoading(false);
-    }
-    loadGuides();
-    return () => { active = false; };
+  const refreshGuides = useCallback(async () => {
+    if (!supabase) { setLoading(false); return; }
+    const { data, error } = await supabase
+      .from("guides")
+      .select("*")
+      .eq("status", "published")
+      .order("created_at", { ascending: false });
+    if (error) console.warn("가이드 목록을 불러오지 못했습니다.", error.message);
+    else setUserGuides((data || []).map(toGuide));
+    setLoading(false);
   }, []);
+
+  useEffect(() => { refreshGuides(); }, [refreshGuides]);
 
   const addGuide = useCallback(async (guide) => {
     if (!supabase) {
@@ -88,7 +79,7 @@ export function GuidesProvider({ children }) {
   // 사용자가 새로 등록한 가이드가 맨 앞에 오도록 정렬
   const guides = useMemo(() => [...userGuides, ...STATIC_GUIDES], [userGuides]);
 
-  const value = { guides, loading, addGuide };
+  const value = { guides, loading, addGuide, refreshGuides };
 
   return <GuidesContext.Provider value={value}>{children}</GuidesContext.Provider>;
 }

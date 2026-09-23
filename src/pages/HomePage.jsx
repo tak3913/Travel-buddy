@@ -1,9 +1,13 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Hero from "../components/Hero.jsx";
 import GuideGrid from "../components/GuideGrid.jsx";
+import { useGuides } from "../context/GuidesContext.jsx";
 
 export default function HomePage() {
+  const { refreshGuides } = useGuides();
+  useEffect(() => { refreshGuides(); }, [refreshGuides]);
   return (
     <>
       <Header />
